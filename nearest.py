@@ -25,7 +25,7 @@ def find_matching_directory(argument, dir_list):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python nearest.py <directory>")
+        print("Usage: nearest <directory>")
         return
 
     argument = sys.argv[1]
