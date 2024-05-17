@@ -10,6 +10,8 @@ But after that, you can often go back there with a much shorter command like:
 
 The command I chose is `c`, for maximum brevity; if you prefer to keep that reserved for something else, feel free to rename `c.bat` accordingly.
 
+The batch file `c.bat` (the actual command) and the accompanying program `nearest.exe` (containing most of the logic) need to be placed somewhere in your path.
+
 The batch file is Windows-specific. Pull requests with shell scripts for other operating systems are welcome. It would also be necessary to conditionally change the location of the recently-accessed list from `%USERPROFILE%\Documents\cd-nearest.csv` to something appropriate for each operating system.
 
 ChatGPT 4o was used in writing this program.
