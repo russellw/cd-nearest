@@ -254,4 +254,4 @@ cd-nearest <directory>
 - If `<directory>` is a prefix, it will find the first matching directory from the list of previously visited directories and use it.
 ---
 
-This did not *quite* work the first time. I'll spare you the page-long compiler error messages. I did not spare ChatGPT them! It correctly noticed that the error was caused by treating `std::string` and `std::filesystem::path` as interchangeable, but failed to fix it. However, this was easy to fix by hand; the working version differs from the above, in only half a dozen lines.
+This did not *quite* work the first time. I'll spare you the page-long compiler error messages. I did not spare ChatGPT them! It correctly noticed that the error was caused by treating `std::string` and `std::filesystem::path` as interchangeable, but failed to fix it. However, this was easy to fix by hand; the working version was hand-edited in only a few lines.
