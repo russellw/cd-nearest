@@ -125,3 +125,133 @@ python script.py <directory>
 Very good! The above worked first time.
 
 There was a perceptible delay in running the program. Entirely understandable, runtime speed is not Python's biggest selling point, but for a command I use many times a day, it would be nice to have instant response.
+
+---
+Q: now translate it to C++
+
+A: Here's the equivalent C++ program that performs the same functionality:
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <filesystem>
+#include <algorithm>
+#include <cctype>
+
+namespace fs = std::filesystem;
+
+std::vector<std::string> read_directory_list(const std::string& file_path) {
+    std::vector<std::string> dir_list;
+    std::ifstream infile(file_path);
+
+    if (!infile.is_open()) {
+        std::ofstream outfile(file_path);
+        return dir_list;
+    }
+
+    std::string line;
+    while (std::getline(infile, line)) {
+        dir_list.push_back(line);
+    }
+
+    infile.close();
+    return dir_list;
+}
+
+void write_directory_list(const std::string& file_path, const std::vector<std::string>& dir_list) {
+    std::ofstream outfile(file_path);
+
+    for (const auto& dir : dir_list) {
+        outfile << dir << "\n";
+    }
+
+    outfile.close();
+}
+
+std::string find_matching_directory(const std::string& argument, const std::vector<std::string>& dir_list) {
+    for (const auto& dir : dir_list) {
+        std::string dir_basename = fs::path(dir).filename().string();
+        std::string arg_lower = argument;
+        std::transform(arg_lower.begin(), arg_lower.end(), arg_lower.begin(), ::tolower);
+        std::string dir_basename_lower = dir_basename;
+        std::transform(dir_basename_lower.begin(), dir_basename_lower.end(), dir_basename_lower.begin(), ::tolower);
+
+        if (dir_basename_lower.find(arg_lower) == 0) {
+            return dir;
+        }
+    }
+    return "";
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <directory>" << std::endl;
+        return 1;
+    }
+
+    std::string argument = argv[1];
+    std::string documents_folder = fs::path(getenv("USERPROFILE")) / "Documents";
+    std::string list_file = documents_folder + "/cd-nearest.csv";
+
+    // Read the current list of directories
+    std::vector<std::string> dir_list = read_directory_list(list_file);
+    std::string target_dir;
+
+    if (fs::path(argument).is_absolute()) {
+        target_dir = argument;
+    } else if (argument.find('\\') != std::string::npos) {
+        target_dir = fs::absolute(argument).string();
+    } else {
+        target_dir = find_matching_directory(argument, dir_list);
+        if (target_dir.empty()) {
+            std::cerr << "No matching directory found for prefix: " << argument << std::endl;
+            return 1;
+        }
+    }
+
+    // Move the chosen directory to the top of the list
+    auto it = std::find(dir_list.begin(), dir_list.end(), target_dir);
+    if (it != dir_list.end()) {
+        dir_list.erase(it);
+    }
+    dir_list.insert(dir_list.begin(), target_dir);
+
+    // Write the updated list back to the file
+    write_directory_list(list_file, dir_list);
+
+    // Print the target directory
+    std::cout << target_dir << std::endl;
+
+    return 0;
+}
+```
+
+### Explanation
+1. **Reading the Directory List**: The `read_directory_list` function reads the list of directories from `cd-nearest.csv`. If the file doesn't exist, it creates an empty one.
+2. **Writing the Directory List**: The `write_directory_list` function writes the updated list of directories back to `cd-nearest.csv`.
+3. **Finding a Matching Directory**: The `find_matching_directory` function looks for a directory in the list whose last component matches the prefix provided in the command-line argument.
+4. **Main Function**:
+   - Checks if the program is run with the correct number of arguments.
+   - Reads the current list of directories from `cd-nearest.csv`.
+   - Determines the target directory based on whether the argument is an absolute path, a relative path, or a prefix.
+   - Moves the chosen directory to the top of the list.
+   - Writes the updated list back to the file.
+   - Prints the target directory.
+
+### Usage
+Compile the program using a C++ compiler:
+```shell
+g++ -o cd-nearest cd-nearest.cpp
+```
+Run the program from the command line, providing a directory argument:
+```shell
+cd-nearest <directory>
+```
+- If `<directory>` is an absolute path, it will be used directly.
+- If `<directory>` is a relative path, it will be resolved relative to the current directory.
+- If `<directory>` is a prefix, it will find the first matching directory from the list of previously visited directories and use it.
+---
+
+This did not *quite* work the first time. I'll spare you the page-long compiler error messages. I did not spare ChatGPT them! It correctly noticed that the error was caused by treating `std::string` and `std::filesystem::path` as interchangeable, but failed to fix it. However, this was easy to fix by hand; the working version differs from the above, in only half a dozen lines.
