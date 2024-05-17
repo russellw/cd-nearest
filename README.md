@@ -16,6 +16,7 @@ The batch file is Windows-specific. Pull requests with shell scripts for other o
 
 ChatGPT 4o was used in writing this program. It was an interesting exercise in testing its capabilities given a simple but not entirely trivial specification. First, a Python version (I have found that to be the language ChatGPT is best at):
 
+---
 Q: Write a Python script for Windows, to print the nearest recent matching dir. That is:
 
 The script keeps a list of directories the user has visited before. The list is stored in the user's Documents folder. It is called `cd-nearest.csv`. It is a simple text file, one entry per line. Each entry just consists of a full pathname of a directory. If the list does not already exist, an empty one is created.
@@ -33,6 +34,7 @@ Otherwise, the argument is taken as a prefix. Go through the list of previously 
 Move the chosen directory to the top of the list.
 
 Then print that directory.
+
 A: Here's a Python script for Windows that accomplishes the described functionality. This script reads a list of previously visited directories from a file, processes a command-line argument to determine the target directory, and updates the list accordingly.
 
 ```python
@@ -118,3 +120,8 @@ python script.py <directory>
 - If `<directory>` is an absolute path, it will be used directly.
 - If `<directory>` is a relative path, it will be resolved relative to the current directory.
 - If `<directory>` is a prefix, it will find the first matching directory from the list of previously visited directories and use it.
+---
+
+Very good! The above worked first time.
+
+There was a perceptible delay in running the program. Entirely understandable, runtime speed is not Python's biggest selling point, but for a command I use many times a day, it would be nice to have instant response.
