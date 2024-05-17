@@ -8,7 +8,7 @@
 
 namespace fs = std::filesystem;
 
-std::vector<std::string> read_directory_list(const std::string& file_path) {
+std::vector<std::string> read_directory_list(const std::filesystem::path& file_path) {
     std::vector<std::string> dir_list;
     std::ifstream infile(file_path);
 
@@ -26,7 +26,7 @@ std::vector<std::string> read_directory_list(const std::string& file_path) {
     return dir_list;
 }
 
-void write_directory_list(const std::string& file_path, const std::vector<std::string>& dir_list) {
+void write_directory_list(const std::filesystem::path& file_path, const std::vector<std::string>& dir_list) {
     std::ofstream outfile(file_path);
 
     for (const auto& dir : dir_list) {
@@ -58,8 +58,8 @@ int main(int argc, char* argv[]) {
     }
 
     std::string argument = argv[1];
-    std::string documents_folder = fs::path(getenv("USERPROFILE")) / "Documents";
-    std::string list_file = documents_folder + "/cd-nearest.csv";
+    auto documents_folder = fs::path(getenv("USERPROFILE")) / "Documents";
+    auto list_file = documents_folder / "cd-nearest.csv";
 
     // Read the current list of directories
     std::vector<std::string> dir_list = read_directory_list(list_file);
