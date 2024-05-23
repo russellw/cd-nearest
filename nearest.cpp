@@ -1,4 +1,4 @@
-#pragma warning(disable: 4530)
+#pragma warning(disable : 4530)
 
 #include <algorithm>
 #include <cctype>
