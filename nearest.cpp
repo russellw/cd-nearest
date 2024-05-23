@@ -1,3 +1,5 @@
+#pragma warning(disable: 4530)
+
 #include <algorithm>
 #include <cctype>
 #include <filesystem>
