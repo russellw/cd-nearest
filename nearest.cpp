@@ -51,6 +51,19 @@ std::string find_matching_directory(const std::string& argument, const std::vect
     return "";
 }
 
+std::string find_subdirectory_with_prefix(const std::string& prefix) {
+    std::string current_directory = std::filesystem::current_path().string();
+    for (const auto& entry : std::filesystem::directory_iterator(current_directory)) {
+        if (entry.is_directory()) {
+            std::string dirname = entry.path().filename().string();
+            if (dirname.find(prefix) == 0) {
+                return entry.path().string();
+            }
+        }
+    }
+    return "";
+}
+
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " <directory>" << std::endl;
@@ -72,8 +85,11 @@ int main(int argc, char* argv[]) {
     } else {
         target_dir = find_matching_directory(argument, dir_list);
         if (target_dir.empty()) {
+            target_dir=find_subdirectory_with_prefix(argument);
+        if (target_dir.empty()) {
             std::cerr << "No matching directory found for prefix: " << argument << std::endl;
             return 1;
+        }
         }
     }
 
