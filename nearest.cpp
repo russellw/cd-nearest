@@ -53,12 +53,21 @@ std::string find_matching_directory(const std::string &argument, const std::vect
 	return "";
 }
 
+std::string to_lowercase(const std::string &str) {
+	std::string lower_str = str;
+	std::transform(lower_str.begin(), lower_str.end(), lower_str.begin(), [](unsigned char c) { return std::tolower(c); });
+	return lower_str;
+}
+
 std::string find_subdirectory_with_prefix(const std::string &prefix) {
 	std::string current_directory = std::filesystem::current_path().string();
+	std::string lower_prefix = to_lowercase(prefix);
+
 	for (const auto &entry: std::filesystem::directory_iterator(current_directory)) {
 		if (entry.is_directory()) {
 			std::string dirname = entry.path().filename().string();
-			if (dirname.find(prefix) == 0) {
+			std::string lower_dirname = to_lowercase(dirname);
+			if (lower_dirname.find(lower_prefix) == 0) {
 				return entry.path().string();
 			}
 		}
