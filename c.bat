@@ -1,5 +1,4 @@
 @echo off
-type nul
+set targetDir=
 for /f "delims=" %%i in ('nearest.exe %*') do set "targetDir=%%i"
-if errorlevel 1 exit /b
 cd /d "%targetDir%"

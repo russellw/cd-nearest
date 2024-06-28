@@ -98,7 +98,6 @@ int main(int argc, char *argv[]) {
 		if (target_dir.empty()) {
 			target_dir = find_subdirectory_with_prefix(argument);
 			if (target_dir.empty()) {
-				std::cerr << "No matching directory found for prefix: " << argument << std::endl;
 				return 1;
 			}
 		}
